@@ -1,0 +1,116 @@
+﻿@using Model.Entity
+
+
+@{
+    ViewData["Title"] = "GetWord";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<EnglishWord>
+
+@{
+    ViewData["Title"] = "Kelimeler Listesi";
+}
+
+<body>
+    <h2>Kelimeler Listesi</h2>
+    <div class="container my-4">
+        <div class="input-group">
+            <select id="languageSelect" class="form-select" style="max-width: 150px;">
+                <option value="english" selected>English</option>
+                <option value="turkish">Turkish</option>
+            </select>
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by word...">
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-sm rounded-4">
+            <div class="card-header bg-primary text-white fs-5">
+                📚 English Words List
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    
+                    <table id="wordTable" class="table table-hover table-bordered align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                
+                                <th id="sortEnglish" style="width: 25%; cursor: pointer;">English Word 🔽</th>
+                                <th style="width: 35%;">Turkish Meanings</th>
+                                <th style="width: 40%;">Example Sentences</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var word in Model)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@word.Text</td>
+                                    <td>
+                                        @string.Join(", ", word.WordMeaning?.Select(wm => wm?.TurkıshWord?.Text) ?? new List<string>())
+                                    </td>
+                                    <td>
+                                        @string.Join(" / ", word.EnglishSentence?.Select(es => es?.Sentence?.Text) ?? new List<string>())
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ jQuery ve sıralama script'i -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let ascending = true;
+
+        $("#sortEnglish").click(function () {
+            const rows = $("#wordTable tbody tr").get();
+
+            rows.sort(function (a, b) {
+                const keyA = $(a).children("td").eq(0).text().toLowerCase();
+                const keyB = $(b).children("td").eq(0).text().toLowerCase();
+
+                if (keyA < keyB) return ascending ? -1 : 1;
+                if (keyA > keyB) return ascending ? 1 : -1;
+                return 0;
+            });
+
+            $.each(rows, function (index, row) {
+                $("#wordTable tbody").append(row);
+            });
+
+            ascending = !ascending;
+            $("#sortEnglish").html("English Word " + (ascending ? "🔽" : "🔼"));
+        });
+    </script>
+    <script>
+        $("#searchInput").on("keyup", function () {
+            const searchText = $(this).val().toLowerCase();
+            const selectedLang = $("#languageSelect").val();
+
+            $("#wordTable tbody tr").each(function () {
+                const englishText = $(this).children("td").eq(0).text().toLowerCase();
+                const turkishText = $(this).children("td").eq(1).text().toLowerCase();
+
+                let match = false;
+
+                if (selectedLang === "english") {
+                    match = englishText.includes(searchText);
+                } else {
+                    match = turkishText.includes(searchText);
+                }
+
+                $(this).toggle(match);
+            });
+        });
+
+        $("#languageSelect").on("change", function () {
+            $("#searchInput").trigger("keyup"); // dil değişince aramayı yeniden uygula
+        });
+    </script>
+</body>
+
+

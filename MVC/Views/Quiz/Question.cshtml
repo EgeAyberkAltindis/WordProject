@@ -1,0 +1,67 @@
+﻿@using MVC.Models.QuizModels
+
+@{
+    ViewData["Title"] = "Question";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model QuizQuestionViewModel
+
+@{
+    ViewData["Title"] = "Quiz";
+}
+
+
+
+<div class="container mt-5">
+    <div class="card shadow-sm rounded-4">
+        <div class="card-header bg-primary text-white fs-5">
+            Quiz Question
+        </div>
+        <div class="card-body">
+            <h4 class="mb-4">What is the meaning of: <span class="text-primary">@Model.EnglishText</span> ?</h4>
+
+            <form asp-action="Answer" method="post">
+                <input type="hidden" name="WordId" value="@Model.WordId" />
+                <input type="hidden" id="hintValue" value="@Model.CorrectTurkish" />
+
+                <div class="list-group">
+                    @foreach (var option in Model.TurkishOptions)
+                    {
+                        <label class="list-group-item">
+                            <input class="form-check-input me-2" type="radio" name="SelectedAnswer" value="@option" required />
+                            @option
+                        </label>
+                       
+                       
+
+                    }
+                </div>
+
+                <button type="submit" class="btn btn-success mt-4 px-4">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div class="text-end">
+        <button id="btnHint" class="btn btn-warning btn-sm mb-2 mt-2">💡 İpucu Göster</button>
+    </div>
+
+    <div id="hintArea" class="alert alert-info d-none">
+        <strong>İpucu:</strong> <span id="hintContent"></span>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#btnHint").click(function () {
+                const hint = $("#hintValue").val();
+                $("#hintContent").text(hint);
+                $("#hintArea").removeClass("d-none");
+            });
+        });
+    </script>
+}

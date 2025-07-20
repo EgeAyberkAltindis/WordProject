@@ -1,0 +1,33 @@
+﻿@using MVC.Helper
+@using MVC.Models.QuizModels.SessionModels
+@{
+    ViewData["Title"] = "FeedBack";
+    var session = Context.Session.Get<QuizSessionModel>("QuizSession");
+    var last = (session != null && session.CurrentQuestionIndex > 0)
+        ? session.Questions[session.CurrentQuestionIndex - 1]
+        : null;
+        }
+
+@if (session != null && last != null)
+{
+    @if (session != null && last != null)
+    {
+        <div class="container mt-5 text-center">
+            <div class="alert @(session.LastAnswerCorrect ? "alert-success" : "alert-danger") shadow-sm rounded-4">
+                <h3>
+                    @(session.LastAnswerCorrect ? "✅ Correct!" : "❌ Wrong Answer")
+                </h3>
+                <p><strong>Your Answer:</strong> @session.LastSelectedAnswer</p>
+                <p><strong>Correct Answer:</strong> @last.CorrectTurkish</p>
+            </div>
+
+            <a href="/Quiz/Question" class="btn btn-primary">Next Question</a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center mt-5">
+            <strong>Uyarı:</strong> Geri bildirim verilecek soru bulunamadı.
+        </div>
+    }
+}

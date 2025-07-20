@@ -1,0 +1,38 @@
+﻿@using MVC.Models.QuizModels.SessionModels
+
+
+
+@{
+    ViewData["Title"] = "Quiz Önizleme";
+}
+@model QuizSessionModel
+<div class="container mt-5">
+    <div class="card shadow rounded-4">
+        <div class="card-header bg-info text-white fs-5">
+            📚 Quiz Başlamadan Önce Öğreneceğin Kelimeler
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>English</th>
+                        <th>Türkçe Anlamı</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var word in Model.Questions)
+                    {
+                        <tr>
+                            <td>@word.EnglishText</td>
+                            <td>@word.CorrectTurkish</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <form asp-action="Question" method="get">
+                <button type="submit" class="btn btn-success mt-3">✅ Quiz'e Başla</button>
+            </form>
+        </div>
+    </div>
+</div>

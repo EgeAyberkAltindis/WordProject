@@ -1,0 +1,50 @@
+﻿@model MVC.Models.RequestModel.AddFullWordRequestModel
+@{
+    ViewData["Title"] = "CreateRangeWord";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>
+        Create Sayfası
+    </title>
+</head>
+<body>
+    <h3>Kelime Ekleme</h3>
+    <hr />
+    <div class=" container">
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-warning">
+                @TempData["Message"]
+            </div>
+        }
+
+
+        <!--<form asp-action="CreateRangeWord" method="post">
+              <div class="form-group">
+                  <label for="RawInputText">Kelime ve Cümle</label>
+                  <textarea asp-for="RawInput" class="form-control" rows="5"></textarea>
+                  <span asp-validation-for="RawInput" class="text-danger"></span>
+              </div>
+              <button type="submit" class="btn btn-primary mt-2">Kaydet</button>
+          </form>-->
+        <form method="post" asp-action="CreateRangeWord">
+            <div class=" form-group">
+                <div class="mb-3">
+                    <label for="rawInput" class="form-label">Multiple Word Input</label>
+                    <textarea class="form-control" id="rawInput" name="rawInput" rows="10" placeholder="Diverse : çeşitli, farklı&#10;The city has a diverse population. / Our team includes people from diverse backgrounds.&#10;&#10;Support : desteklemek / destek&#10;She supports equal rights for all. / I need emotional support right now."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Words</button>
+            </div>
+           
+        </form>
+
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>

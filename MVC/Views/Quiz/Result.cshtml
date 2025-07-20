@@ -1,0 +1,45 @@
+﻿@using MVC.Helper
+@using MVC.Models.QuizModels
+
+@{
+    ViewData["Title"] = "Quiz Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+}
+
+
+
+<div class="container mt-5 text-center">
+    <div class="alert alert-success shadow-sm rounded-4">
+        <h3 class="mb-3">🎉 Congratulations!</h3>
+        <p>You have completed the quiz.</p>
+        <a href="/Quiz/Start" class="btn btn-primary mt-3">Start New Quiz</a>
+    </div>
+</div>
+
+  
+
+
+
+
+
+@model QuizResultViewModel
+
+<div class="container mt-5">
+    <div class="card shadow-sm rounded-4">
+        <div class="card-header bg-success text-white fs-5">
+            ✅ Quiz Result
+        </div>
+        <div class="card-body text-center">
+            <h3>👏 Well done!</h3>
+            <p><strong>Total Questions:</strong> @Model.TotalQuestions</p>
+            <p><strong>Correct Answers:</strong> @Model.CorrectCount</p>
+            <p><strong>Wrong Answers:</strong> @Model.WrongCount</p>
+           
+           
+
+            <a href="/Quiz/Start" class="btn btn-primary mt-4">🔁 Start New Quiz</a>
+        </div>
+    </div>
+</div>
+
