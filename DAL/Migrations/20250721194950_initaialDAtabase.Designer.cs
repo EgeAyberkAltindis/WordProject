@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(WordContext))]
-    [Migration("20250720154027_initialdatabase")]
-    partial class initialdatabase
+    [Migration("20250721194950_initaialDAtabase")]
+    partial class initaialDAtabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,9 +108,6 @@ namespace DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("InQuizShown")
-                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()

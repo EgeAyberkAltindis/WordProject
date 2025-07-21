@@ -33,6 +33,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;              // GDPR uyumu için gerekli
 }); // Session sistemini ekle
 
+var accessKeyFromConfig = builder.Configuration["AccessControl:AccessKey"];
+
+
 var app = builder.Build();
 
 
@@ -56,5 +59,19 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Use(async (context, next) =>
+{
+    var userKey = context.Request.Query["accessKey"].ToString();
+
+    if (userKey != accessKeyFromConfig)
+    {
+        context.Response.StatusCode = 403;
+        await context.Response.WriteAsync("Yetkisiz eriþim.");
+        return;
+    }
+
+    await next(); // Doðruysa devam et
+});
 
 app.Run();

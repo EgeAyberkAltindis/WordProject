@@ -106,9 +106,6 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("InQuizShown")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
