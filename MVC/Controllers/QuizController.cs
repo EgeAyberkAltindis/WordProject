@@ -50,8 +50,6 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult Preview()
         {
-            
-
             var session = HttpContext.Session.Get<QuizSessionModel>("QuizSession");
             if (session == null)
                 return RedirectToAction("StartQuiz");
@@ -61,8 +59,6 @@ namespace MVC.Controllers
         [HttpPost]
         public IActionResult StartQuiz()
         {
-
-
             var session = TempData.Get<QuizSessionModel>("QuizSession");
             if (session == null)
                 return RedirectToAction("Start");
@@ -80,55 +76,85 @@ namespace MVC.Controllers
             // ❗ Session boşsa -> Start'a yönlendir
             if (session == null || session.CurrentQuestionIndex >= session.Questions.Count)
                 return RedirectToAction("Result");
+            // 🔍 1. Minimum QuizInShown değerini bul
 
-            var question = session.Questions[session.CurrentQuestionIndex];
-            return View(question);
+            int minShown = session.Questions.Min(q => q.QuizInShown);
+
+            // 🎯 2. Bu değere sahip tüm soruları al
+            var candidates = session.Questions
+                                    .Where(q => q.QuizInShown == minShown)
+                                    .ToList();
+
+            // 🔀 3. Adaylardan rastgele birini seç
+            var random = new Random();
+            var selected = candidates[random.Next(candidates.Count)];
+
+            // ➕ 4. Bu sorunun gösterim sayısını artır
+            selected.QuizInShown++;
+
+            // 🔁 5. Seçilen soruyu View'e gönder
+            HttpContext.Session.SetObjectAsJson("QuizSession", session);
+            return View(selected);
+
+            
         }
         public IActionResult Feedback()
         {
             return View();
         }
         [HttpPost]
-        public async  Task<IActionResult> Answer(QuizAnswerInputModel answer)
+        public async Task<IActionResult> Answer(QuizAnswerInputModel answer)
         {
-
             var session = HttpContext.Session.GetObjectFromJson<QuizSessionModel>("QuizSession");
             if (session == null)
                 return RedirectToAction("Start");
 
-            var current = session.Questions[session.CurrentQuestionIndex];
-            bool isCorrect = string.Equals(answer.SelectedAnswer?.Trim(), current.CorrectTurkish?.Trim(), StringComparison.OrdinalIgnoreCase);
+            // ✅ 1. Cevaplanan soruyu bul
+            var current = session.Questions.FirstOrDefault(q => q.WordId == answer.WordId);
+            if (current == null)
+                return RedirectToAction("Question"); // Hatalı yönlendirme
 
+            // ✅ 2. Cevap kontrolü
+            bool isCorrect = string.Equals(
+                answer.SelectedAnswer?.Trim(),
+                current.CorrectTurkish?.Trim(),
+                StringComparison.OrdinalIgnoreCase
+            );
 
             if (isCorrect)
+            {
                 session.CorrectCount++;
+                current.CorrectCount++;
+            }
             else
+            {
                 session.WrongCount++;
+                current.WrongCount++;
+            }
 
             session.LastAnswerCorrect = isCorrect;
             session.LastSelectedAnswer = answer.SelectedAnswer;
-            session.CurrentQuestionIndex++;
+            session.LastAnsweredWordId = current.WordId;
 
-            // 🔁 Tüm sorular gösterildiyse
-            if (session.CurrentQuestionIndex >= session.Questions.Count)
-            {
-                    // Soruları tekrar başlat
-                    session.CurrentQuestionIndex = 0;
-                    session.Questions = ShuffleHelper.Shuffle(session.Questions); // opsiyonel
-
-                    HttpContext.Session.SetObjectAsJson("QuizSession", session); // tekrar yaz
-                    return RedirectToAction("Question");
-               
-            }
-
+            // ✅ 3. Güncellenmiş session'ı sakla
             HttpContext.Session.SetObjectAsJson("QuizSession", session);
+
             return RedirectToAction("Feedback");
 
+        }
+
+        [HttpPost]
+        public IActionResult Finish()
+        {
+            var session = HttpContext.Session.GetObjectFromJson<QuizSessionModel>("QuizSession");
+            if (session == null)
+                return RedirectToAction("Start");
+
+            return RedirectToAction("Result");
         }
         public IActionResult Result()
         {
             var session = HttpContext.Session.GetObjectFromJson<QuizSessionModel>("QuizSession");
-
             if (session == null)
                 return RedirectToAction("Start");
 
@@ -136,8 +162,15 @@ namespace MVC.Controllers
             {
                 TotalQuestions = session.Questions.Count,
                 CorrectCount = session.CorrectCount,
-                WrongCount = session.WrongCount
-                // AverageScore çıkarıldı
+                WrongCount = session.WrongCount,
+                WordResults = session.Questions
+                    .Select(q => new QuizResultItemViewModel
+                    {
+                        English = q.EnglishText,
+                        Correct = q.CorrectCount,
+                        Wrong = q.WrongCount,
+                        TimesShown = q.QuizInShown
+                    }).ToList()
             };
 
             HttpContext.Session.Remove("QuizSession");

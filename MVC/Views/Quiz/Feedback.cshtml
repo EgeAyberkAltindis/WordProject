@@ -1,6 +1,41 @@
 ﻿@using MVC.Helper
 @using MVC.Models.QuizModels.SessionModels
-@{
+
+<body>
+    @{
+        ViewData["Title"] = "Feedback";
+        var session = Context.Session.GetObjectFromJson<QuizSessionModel>("QuizSession");
+        var last = session?.Questions.FirstOrDefault(q => q.WordId == session.LastAnsweredWordId);
+    }
+
+    @if (session != null && last != null)
+    {
+        <div class="container mt-5 text-center">
+            <div class="alert @(session.LastAnswerCorrect ? "alert-success" : "alert-danger") shadow-sm rounded-4">
+                <h3>
+                    @(session.LastAnswerCorrect ? "✅ Correct!" : "❌ Wrong Answer")
+                </h3>
+                <p><strong>Your Answer:</strong> @session.LastSelectedAnswer</p>
+                <p><strong>Correct Answer:</strong> @last.CorrectTurkish</p>
+                <p><strong>Times Shown:</strong> @last.QuizInShown</p>
+                <p><strong>Correct:</strong> @last.CorrectCount | <strong>Wrong:</strong> @last.WrongCount</p>
+            </div>
+
+            <a href="/Quiz/Question" class="btn btn-primary">Next Question</a>
+        </div>
+    }
+    else
+    {
+        <div class="container mt-5 text-center">
+            <div class="alert alert-warning">
+                <strong>Session expired or no data available.</strong>
+            </div>
+            <a href="/Quiz/Start" class="btn btn-outline-secondary">Start Over</a>
+        </div>
+    }
+
+</body>
+@* @{
     ViewData["Title"] = "FeedBack";
     var session = Context.Session.Get<QuizSessionModel>("QuizSession");
     var last = (session != null && session.CurrentQuestionIndex > 0)
@@ -30,4 +65,4 @@
             <strong>Uyarı:</strong> Geri bildirim verilecek soru bulunamadı.
         </div>
     }
-}
+} *@

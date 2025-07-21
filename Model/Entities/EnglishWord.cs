@@ -14,8 +14,6 @@ namespace Model.Entity
     {
 
         public string Text { get; set; }
-        public int InQuizShown { get; set; }
-       
         public int TimesShown { get; set; } = 0;
         public string? WordType { get; set; }
         public ICollection<WordMeaning> WordMeaning { get; set; }

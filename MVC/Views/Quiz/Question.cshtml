@@ -50,9 +50,17 @@
         <strong>İpucu:</strong> <span id="hintContent"></span>
     </div>
 
+    <form asp-action="Finish" method="post" class="mt-2" onsubmit="return confirm('Quiz\'i bitirmek istediğinize emin misiniz?');">
+        <button type="submit" class="btn btn-outline-danger btn-sm">🛑 Quiz'i Bitir</button>
+    </form>
+
 </div>
 
 
+
+@* <form asp-action="Finish" method="post" class="mt-2" onsubmit="return confirm('Quiz\'i bitirmek istediğinize emin misiniz?');">
+    <button type="submit" class="btn btn-outline-danger btn-sm">🛑 Quiz'i Bitir</button>
+</form> *@
 
 @section Scripts {
     <script>
