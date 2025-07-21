@@ -3,7 +3,8 @@ services:
     name: WordProject
     runtime: dotnet
     branch: master
-    buildCommand: dotnet build
-    startCommand: dotnet WordProject.dll
+    buildCommand: dotnet build MVC/MVC.csproj
+    startCommand: dotnet MVC.dll
+    rootDir: MVC
     region: frankfurt
-    plan: frees
+    plan: free
