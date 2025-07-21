@@ -1,10 +1,67 @@
 ﻿@using MVC.Models.QuizModels.SessionModels
-
-
-
 @{
     ViewData["Title"] = "Quiz Önizleme";
 }
+
+@model QuizSessionModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Hazırlık</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="card shadow rounded-4">
+            <div class="card-header bg-info text-white fs-5 text-center text-md-start">
+                📚 Quiz Başlamadan Önce Öğreneceğin Kelimeler
+            </div>
+            <div class="card-body">
+                <!-- 📱 Tabloyu kaydırılabilir hale getirdik -->
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">English</th>
+                                <th scope="col">Türkçe Anlamı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var word in Model.Questions)
+                            {
+                                <tr>
+                                    <td>@word.EnglishText</td>
+                                    <td>@word.CorrectTurkish</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 📱 Butonu ortaladık ve genişlik uyarladık -->
+                <div class="d-grid d-md-flex justify-content-center mt-4">
+                    <form asp-action="Question" method="get" class="w-100 w-md-auto">
+                        <button type="submit" class="btn btn-success w-100 w-md-auto px-4 py-2">
+                            ✅ Quiz'e Başla
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+@* <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+
 @model QuizSessionModel
 <div class="container mt-5">
     <div class="card shadow rounded-4">
@@ -34,5 +91,5 @@
                 <button type="submit" class="btn btn-success mt-3">✅ Quiz'e Başla</button>
             </form>
         </div>
-    </div>
-</div>
+    </div> *@
+@* </div> *@

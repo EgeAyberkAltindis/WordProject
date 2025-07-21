@@ -1,9 +1,74 @@
 ﻿@using MVC.Helper
 @using MVC.Models.QuizModels
+@model QuizResultViewModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
 <body>
-    @model QuizResultViewModel
 
     <div class="container mt-5">
+        <div class="card shadow-sm rounded-4">
+            <div class="card-header bg-success text-white fs-5 text-center text-md-start">
+                📊 Quiz Result
+            </div>
+            <div class="card-body">
+                <h4 class="mb-3 text-center text-md-start">Total Questions: @Model.TotalQuestions</h4>
+                <p class="text-success fw-semibold text-center text-md-start">✅ Correct: @Model.CorrectCount</p>
+                <p class="text-danger fw-semibold text-center text-md-start">❌ Wrong: @Model.WrongCount</p>
+
+                <!-- 📱 Tablo responsive hale getirildi -->
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>English Word</th>
+                                <th>Correct</th>
+                                <th>Wrong</th>
+                                <th>Times Shown</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.WordResults)
+                            {
+                                <tr>
+                                    <td>@item.English</td>
+                                    <td>@item.Correct</td>
+                                    <td>@item.Wrong</td>
+                                    <td>@item.TimesShown</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 📱 Butonlar mobilde ortalanmış ve uyarlanmış -->
+                <div class="mt-4 d-grid gap-2 d-md-flex justify-content-center justify-content-md-end">
+                    <a href="/Quiz/Start" class="btn btn-primary w-100 w-md-auto px-4">🔁 Start New Quiz</a>
+                    <a href="/" class="btn btn-outline-secondary w-100 w-md-auto px-4">🏠 Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+@* <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body> *@
+    
+
+ @*    <div class="container mt-5">
         <div class="card shadow-sm rounded-4">
             <div class="card-header bg-success text-white fs-5">📊 Quiz Result</div>
             <div class="card-body">
@@ -40,46 +105,4 @@
             </div>
         </div>
     </div>
-</body>
-@* @{
-    ViewData["Title"] = "Quiz Result";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-   
-}
-
-
-
-<div class="container mt-5 text-center">
-    <div class="alert alert-success shadow-sm rounded-4">
-        <h3 class="mb-3">🎉 Congratulations!</h3>
-        <p>You have completed the quiz.</p>
-        <a href="/Quiz/Start" class="btn btn-primary mt-3">Start New Quiz</a>
-    </div>
-</div>
-
-  
-
-
-
-
-
-@model QuizResultViewModel
-
-<div class="container mt-5">
-    <div class="card shadow-sm rounded-4">
-        <div class="card-header bg-success text-white fs-5">
-            ✅ Quiz Result
-        </div>
-        <div class="card-body text-center">
-            <h3>👏 Well done!</h3>
-            <p><strong>Total Questions:</strong> @Model.TotalQuestions</p>
-            <p><strong>Correct Answers:</strong> @Model.CorrectCount</p>
-            <p><strong>Wrong Answers:</strong> @Model.WrongCount</p>
-           
-           
-
-            <a href="/Quiz/Start" class="btn btn-primary mt-4">🔁 Start New Quiz</a>
-        </div>
-    </div>
-</div>
- *@
+</body> *@

@@ -1,12 +1,69 @@
 ﻿@using MVC.Helper
 @using MVC.Models.QuizModels.SessionModels
+@{
+    ViewData["Title"] = "Feedback";
+    var session = Context.Session.GetObjectFromJson<QuizSessionModel>("QuizSession");
+    var last = session?.Questions.FirstOrDefault(q => q.WordId == session.LastAnsweredWordId);
+}
 
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quiz Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
 <body>
-    @{
-        ViewData["Title"] = "Feedback";
-        var session = Context.Session.GetObjectFromJson<QuizSessionModel>("QuizSession");
-        var last = session?.Questions.FirstOrDefault(q => q.WordId == session.LastAnsweredWordId);
+
+    @if (session != null && last != null)
+    {
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8">
+                    <div class="alert @(session.LastAnswerCorrect ? "alert-success" : "alert-danger") shadow-sm rounded-4 text-center p-4">
+                        <h3 class="mb-3">
+                            @(session.LastAnswerCorrect ? "✅ Correct!" : "❌ Wrong Answer")
+                        </h3>
+                        <p><strong>Your Answer:</strong> @session.LastSelectedAnswer</p>
+                        <p><strong>Correct Answer:</strong> @last.CorrectTurkish</p>
+                        <p><strong>Times Shown:</strong> @last.QuizInShown</p>
+                        <p><strong>Correct:</strong> @last.CorrectCount | <strong>Wrong:</strong> @last.WrongCount</p>
+                    </div>
+
+                    <div class="d-grid d-md-flex justify-content-center">
+                        <a href="/Quiz/Question" class="btn btn-primary w-100 w-md-auto px-4 py-2">Next Question</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
+    else
+    {
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 text-center">
+                    <div class="alert alert-warning p-4 rounded-4 shadow-sm">
+                        <strong>Session expired or no data available.</strong>
+                    </div>
+                    <div class="d-grid d-md-flex justify-content-center">
+                        <a href="/Quiz/Start" class="btn btn-outline-secondary w-100 w-md-auto px-4 py-2">Start Over</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</body>
+</html>
+@* <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    
 
     @if (session != null && last != null)
     {
@@ -34,35 +91,4 @@
         </div>
     }
 
-</body>
-@* @{
-    ViewData["Title"] = "FeedBack";
-    var session = Context.Session.Get<QuizSessionModel>("QuizSession");
-    var last = (session != null && session.CurrentQuestionIndex > 0)
-        ? session.Questions[session.CurrentQuestionIndex - 1]
-        : null;
-        }
-
-@if (session != null && last != null)
-{
-    @if (session != null && last != null)
-    {
-        <div class="container mt-5 text-center">
-            <div class="alert @(session.LastAnswerCorrect ? "alert-success" : "alert-danger") shadow-sm rounded-4">
-                <h3>
-                    @(session.LastAnswerCorrect ? "✅ Correct!" : "❌ Wrong Answer")
-                </h3>
-                <p><strong>Your Answer:</strong> @session.LastSelectedAnswer</p>
-                <p><strong>Correct Answer:</strong> @last.CorrectTurkish</p>
-            </div>
-
-            <a href="/Quiz/Question" class="btn btn-primary">Next Question</a>
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-warning text-center mt-5">
-            <strong>Uyarı:</strong> Geri bildirim verilecek soru bulunamadı.
-        </div>
-    }
-} *@
+</body> *@

@@ -60,18 +60,33 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+
 app.Use(async (context, next) =>
 {
-    var userKey = context.Request.Query["accessKey"].ToString();
+    var accessKey = builder.Configuration["AccessControl:AccessKey"];
+    var sessionKey = context.Session.GetString("AccessGranted");
 
-    if (userKey != accessKeyFromConfig)
+    // Daha önce accessKey doðru girilmiþse oturum aktif demektir
+    if (sessionKey == "true")
     {
-        context.Response.StatusCode = 403;
-        await context.Response.WriteAsync("Yetkisiz eriþim.");
+        await next();
         return;
     }
 
-    await next(); // Doðruysa devam et
+    // Yeni giriþ yapýlmýþ mý kontrol et
+    var userKey = context.Request.Query["accessKey"].ToString();
+
+    if (userKey == accessKey)
+    {
+        context.Session.SetString("AccessGranted", "true");
+        await next();
+        return;
+    }
+
+    // Eriþim engellensin
+    context.Response.StatusCode = 403;
+    await context.Response.WriteAsync("Yetkisiz eriþim.");
 });
 
 app.Run();
