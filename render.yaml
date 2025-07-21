@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: WordProject
+    runtime: dotnet
+    branch: master
+    buildCommand: dotnet build
+    startCommand: dotnet WordProject.dll
+    region: frankfurt
+    plan: frees
